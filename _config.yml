@@ -1,0 +1,60 @@
+title: Christian Ponte
+email: christian.ponte@udc.es
+description: >- # this means to ignore newlines until "baseurl:"
+  Welcome to my personal page. I'm Christian, a PhD student at Universidade da
+  Coruña, under the direction of Dr. María J. Martín Santamaría and Dr. Jorge
+  González Domínguez. My research is focused on epistasis interactions in GWAS,
+  from its genetic architecture, simulation models and detection methods. In my
+  free time I also like to contribute to open source projects.
+baseurl: ""
+url: "https://chponte.github.io"
+
+socials:
+  - title: Email
+    icon: fas fa-envelope
+    url: mailto:christian.ponte@udc.es
+  - title: Twitter
+    icon: fab fa-twitter
+    url: https://twitter.com/chpont3
+  - title: Github
+    icon: fab fa-github
+    url: https://github.com/chponte
+  - title: ORCID
+    icon: fab fa-orcid
+    url: https://orcid.org/0000-0002-4728-6398
+  - title: ResearchGate
+    icon: ai ai-researchgate
+    url: https://www.researchgate.net/profile/Christian_Ponte-Fernandez
+
+# Build settings
+plugins:
+  - jekyll-analytics
+  - jekyll-sitemap
+
+collections:
+  publications:
+    output: true
+  software:
+    output: false
+
+jekyll_analytics:
+  GoogleAnalytics:
+    id: UA-129572314-1
+    anonymizeIp: false
+
+# Exclude from processing.
+# The following items will not be processed, by default:
+#  .sass-cache/
+#  .jekyll-cache/
+#  gemfiles/
+#  Gemfile
+#  Gemfile.lock
+#  node_modules/
+#  vendor/bundle/
+#  vendor/cache/
+#  vendor/gems/
+#  vendor/ruby/
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+exclude:
+  - scripts/

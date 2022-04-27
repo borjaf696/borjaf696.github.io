@@ -1,0 +1,34 @@
+---
+layout: default
+title: Publications
+nav_order: 2
+permalink: /publications/
+---
+
+<main class="list">
+  <h1>Journal papers:</h1>
+  {% assign publications = site.publications |
+        where: "type", "journal" |
+        sort:"date" |
+        reverse %}
+  <ul>
+    {% for p in publications %}
+    <li>
+      {% include publication-item.html publication=p %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h1>Conference papers:</h1>
+  {% assign publications = site.publications |
+        where: "type", "conference" |
+        sort:"date" |
+        reverse %}
+  <ul>
+    {% for p in publications %}
+    <li>
+      {% include publication-item.html publication=p %}
+    </li>
+    {% endfor %}
+  </ul>
+</main>

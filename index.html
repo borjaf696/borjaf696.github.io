@@ -1,0 +1,46 @@
+---
+layout: default
+title: Home
+nav_order: 1
+permalink: /
+---
+
+<main class="list">
+  <div class="site-description">
+    <p>
+      {{ site.description }}
+    </p>
+  </div>
+
+  <div class="socials">
+    {% for s in site.socials %}
+    <a href="{{ s.url }}" title="{{ s.title }}"><i class="{{ s.icon }}"></i></a>
+    {% endfor %}
+  </div>
+
+  <h1>Highlighted publications</h1>
+  {% assign publications = site.publications |
+    where: "highlighted", "true" |
+    sort:"date" |
+    reverse %}
+  <ul>
+    {% for p in publications %}
+    <li>
+      {% include publication-item.html publication=p %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h1>Highlighted software</h1>
+  {% assign software = site.software |
+    where: "highlighted", "true" |
+    sort:"date" |
+    reverse %}
+  <ul>
+    {% for s in software %}
+    <li>
+      {% include software-item.html software=s %}
+    </li>
+    {% endfor %}
+  </ul>
+</main>

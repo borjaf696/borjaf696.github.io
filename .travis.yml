@@ -1,0 +1,33 @@
+language: ruby
+rvm:
+  - 2.6.3
+
+script: ./scripts/cibuild.sh
+
+branches:
+  only:
+  - source
+  - dev
+
+env:
+  global:
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
+
+addons:
+  apt:
+    packages:
+    - libcurl4-openssl-dev
+
+sudo: false
+
+cache: bundler # caching bundler gem packages will speed up build
+
+deploy:
+  on:
+    branch: source
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  target_branch: master
+  keep_history: true
+  local_dir: ./_site

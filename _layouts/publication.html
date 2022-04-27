@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<main>
+    <h1>{{ page.title }}</h1>
+
+    <span class="info">
+        {% if page.type == "journal" %}
+        {{ page.journal }}
+        {% else %}
+        {{ page.conference }}
+        {% endif %}
+        <br>
+        <a href="https://doi.org/{{ page.doi }}">doi: {{ page.doi }}</a>
+    </span>
+
+    <h2>Authors</h2>
+    <ul class="authors">
+        {% assign authors = page.authors | split: ", " %}
+        {% for author in authors %}
+        {% assign authorinfo = site.data.authors[author] %}
+        <li><i class="fas fa-pencil-alt fa-sm fa-fw"></i>
+            {% if authorinfo.homepage %}
+            <a href="{{ authorinfo.homepage }}">{{ authorinfo.authorname }}</a>
+            {% else %}
+            {{ authorinfo.authorname }}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    {{ content }}
+
+    <a href="https://doi.org/{{ page.doi }}">Full text ⟶</a>
+    {% if page.software_res %}
+    <a href="{{ "software/" | append: page.software_res | absolute_url }}">
+        Software package ⟶
+    </a>
+    {% endif %}
+</main>

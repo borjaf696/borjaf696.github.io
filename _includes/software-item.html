@@ -1,0 +1,8 @@
+{% assign s = include.software %}
+<div class="header">
+  <span>{{ s.type }}</span>
+  <h2><a href="{{ s.external_url }}">{{ s.title }}</a></h2>
+</div>
+<div class="body">
+  <p>{{ s }}</p>
+</div>

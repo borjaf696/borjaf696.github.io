@@ -1,0 +1,34 @@
+---
+layout: default
+title: Software
+nav_order: 3
+permalink: /software/
+---
+
+<main class="list">
+  <h1>Software projects:</h1>
+  {% assign software = site.software |
+    where: "type", "Software" |
+    sort: "date" |
+    reverse %}
+  <ul>
+    {% for s in software %}
+    <li>
+      {% include software-item.html software=s %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <h1>Other software:</h1>
+  {% assign software = site.software |
+    where_exp: "item", "item.type != 'Software'" |
+    sort: "date" |
+    reverse %}
+  <ul>
+    {% for s in software %}
+    <li>
+      {% include software-item.html software=s %}
+    </li>
+    {% endfor %}
+  </ul>
+</main>
