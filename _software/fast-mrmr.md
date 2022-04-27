@@ -2,7 +2,7 @@
 title: fast-mRMR
 type: Software
 external_url: https://github.com/borjaf696/Fast-mRMR
-date: 
+date: 29-10-2018
 highlighted: true
 ---
 

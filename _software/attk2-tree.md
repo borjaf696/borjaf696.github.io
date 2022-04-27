@@ -2,7 +2,7 @@
 title: attk2-tree
 type: Software
 external_url: https://github.com/borjaf696/k2AttDyn
-date: 
+date: 01-07-2019
 highlighted: true
 ---
 

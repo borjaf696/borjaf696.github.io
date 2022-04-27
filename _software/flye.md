@@ -2,7 +2,7 @@
 title: flye
 type: Software
 external_url: https://github.com/borjaf696/Compact_Flye
-date: 
+date: 01-09-2021
 highlighted: true
 ---
 
