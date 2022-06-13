@@ -5,7 +5,7 @@ title:  "ViQUF: de novo Viral Quasispecies reconstruction using Unitig-based Flo
 authors: borja, susana, jose, leena
 journal: "BMC (Submitted)"
 shortjournal: ""
-doi: 10.1109/TCBB.2020.3030312
+doi: https://arxiv.org/abs/2112.06590
 date: 12-12-2021
 openaccess: true
 pubmed: false

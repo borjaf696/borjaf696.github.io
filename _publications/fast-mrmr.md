@@ -5,7 +5,7 @@ title:  "Parallel Feature Selection for Distributed-Memory Clusters"
 authors: jorge, borja
 journal: "Information Sciences"
 shortjournal: "IJHPCA"
-doi: 10.1177/1094342019852128
+doi: 10.1016/j.ins.2019.01.050
 date: 29-10-2018
 openaccess: false
 highlighted: true

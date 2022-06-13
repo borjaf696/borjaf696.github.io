@@ -5,7 +5,7 @@ title:  "Memory-Efficient Assembly using Flye"
 authors: borja, susana, jose
 journal: "IEEE/ACM Trans Comput Biol Bioinform"
 shortjournal: ""
-doi: 10.1186/s12859-020-3456-3
+doi: 10.1109/TCBB.2021.3108843
 date: 01-09-2021
 openaccess: true
 pubmed: 32272874
