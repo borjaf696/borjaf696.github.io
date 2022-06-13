@@ -1,9 +1,9 @@
 ---
-title: fast-mRMR
+title: Fast-mRMR
 type: Software
 external_url: https://github.com/borjaf696/Fast-mRMR
 date: 29-10-2018
-highlighted: true
+highlighted: false
 ---
 
 Several optimizations have been introduced in this improved version in order to speed up the costliest computation of the original algorithm: Mutual Information (MI) calculations. These optimizations are described in the followings: 
