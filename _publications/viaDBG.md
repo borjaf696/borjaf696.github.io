@@ -2,7 +2,7 @@
 layout: publication
 type: journal
 title:  "Inference of viral quasispecies with a paired de Bruijn graph"
-authors: borja, Susana Ladra, Jose R Paramá, Leena Salmela
+authors: borja, susana, jose, leena
 journal: "Bioinformatics"
 shortjournal: ""
 doi: 10.1093/bioinformatics/btaa782

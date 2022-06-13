@@ -2,7 +2,7 @@
 layout: publication
 type: journal
 title:  "Parallel Feature Selection for Distributed-Memory Clusters"
-authors: Jorge González-Domínguez, Verónica Bolón-Canedo, Borja Freire, Juan Touriño
+authors: jorge, borja
 journal: "Information Sciences"
 shortjournal: "IJHPCA"
 doi: 10.1177/1094342019852128

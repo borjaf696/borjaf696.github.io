@@ -2,7 +2,7 @@
 layout: publication
 type: journal
 title:  "ViQUF: de novo Viral Quasispecies reconstruction using Unitig-based Flow networks"
-authors: borja, Susana Ladra, José R. Paramá, Leena Salmela
+authors: borja, susana, jose, leena
 journal: "BMC (Submitted)"
 shortjournal: ""
 doi: 10.1109/TCBB.2020.3030312
