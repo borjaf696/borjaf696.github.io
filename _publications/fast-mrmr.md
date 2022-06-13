@@ -9,6 +9,7 @@ doi: 10.1177/1094342019852128
 date: 29-10-2018
 openaccess: false
 highlighted: true
+pubmed: false
 abstract: |
     Feature selection is nowadays an extremely important data mining stage in the field of machine learning due to the appearance of problems of high dimensionality. In the
 literature there are numerous feature selection methods, mRMR (minimum-RedundancyMaximum-Relevance) being one of the most widely used. However, although it achieves good results in selecting relevant features, it is impractical for datasets with thousands of features. A possible solution to this limitation is the use of the fast-mRMR method, a greedy optimization of the mRMR algorithm that improves both scalability and efficiency. In this work we present fast-mRMR-MPI, a novel hybrid parallel implementation that uses MPI and

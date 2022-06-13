@@ -8,7 +8,7 @@ shortjournal: ""
 doi: 10.1109/TCBB.2020.3030312
 date: 12-12-2021
 openaccess: true
-pubmed: 
+pubmed: false
 highlighted: true
 abstract: |
     During viral infection, intrahost mutation and recombination can lead to significant evolution, resulting in a population of viruses that harbor multiple haplotypes. The task of reconstructing these haplotypes from short-read sequencing data is called viral quasispecies assembly, and it can be categorized as a multiassembly problem. We consider the de novo version of the problem, where no reference is available. 
