@@ -51,3 +51,5 @@ jekyll_analytics:
 # the internal "default list".
 exclude:
   - scripts/
+
+theme: jekyll-theme-slate
