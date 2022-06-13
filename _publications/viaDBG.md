@@ -7,7 +7,7 @@ journal: "Bioinformatics"
 shortjournal: ""
 doi: 10.1093/bioinformatics/btaa782
 date: 01-05-2021
-highlighted: false
+highlighted: True
 abstract: |
    * Motivation *: RNA viruses exhibit a high mutation rate and thus they exist in infected cells as a population of closely related strains called viral quasispecies. The viral quasispecies assembly problem asks to characterize the quasispecies present in a sample from high-throughput sequencing data. We study the de novo version of the problem, where reference sequences of the quasispecies are not available. Current methods for assembling viral quasispecies are either based on overlap graphs or on de Bruijn graphs. Overlap graph-based methods tend to be accurate but slow, whereas de Bruijn graph-based methods are fast but less accurate.
 
