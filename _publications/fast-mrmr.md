@@ -8,7 +8,7 @@ shortjournal: "IJHPCA"
 doi: 10.1016/j.ins.2019.01.050
 date: 29-10-2018
 openaccess: false
-highlighted: true
+highlighted: false
 pubmed: false
 abstract: |
     Feature selection is nowadays an extremely important data mining stage in the field of machine learning due to the appearance of problems of high dimensionality. In the
