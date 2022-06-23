@@ -2,7 +2,7 @@
 layout: publication
 type: journal
 title:  "Parallel Feature Selection for Distributed-Memory Clusters"
-authors: jorge, borja
+authors: borja,jorge
 journal: "Information Sciences"
 shortjournal: "IJHPCA"
 doi: 10.1016/j.ins.2019.01.050
