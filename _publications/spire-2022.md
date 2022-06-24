@@ -7,6 +7,7 @@ journal: "SPIRE-2022"
 shortjournal: ""
 date: 24-06-2022
 highlighted: false
+openaccess: true
 pubmed: false
 abstract: |
    We present an algorithm enumerating all Lyndon subsequences in time and space linear to the output size.
