@@ -4,6 +4,7 @@ title: Trainee
 nav_order: 5
 permalink: /trainee/
 ---
+
 ## Evaluación de modelos
 Un paso importante en la construcción de algoritmos de Machine learning, ML, o Deep Learning, DL, es la correcta evaluación de estos. Típicamente la evaluación de las técnicas de ML y DL pasa por dado un conjunto de datos partirlo en dos bloques: training y test, y probar lo bien o mal que funciona la técnica en base a los resultados obtenidos en test. Sin embargo, esto no es del todo adecuado dado que en muchas ocasiones un solo conjunto de entrenamiento puede producir sesgos o dar predicciones poco robustas (el azar es importante tenerlo en cuenta a la hora de ajustar modelos). Además, interesa también ser capaz de comparar distintos modelos, así como ajustar hiperparámetros en un modelo de ML. ¿Como comparamos hiperparámetros? ¿Usamos un solo split de datos y posteriormente evaluamos contra test? Por lo general, este no suele ser el pathway que se sigue sino que el número de divisiones del conjunto de datos suele ser 3:
 * Training - autoexplicativo, se trata de un subconjunto del conjunto de datos original que se usa para el entramiento del modelo. Es el subconjunto empleado para ajustar los modelos y todos sus parámetros (dados unos hiperparámetros fijados por el usuario).
@@ -62,7 +63,11 @@ Se trata de un caso extremo de k-Folding con valor de "K" igual al tamaño de la
 
 ### Nested cross validation:
 Se trata de aproximaciones genéricas donde se busca realizar el ajuste de los hiperparámetros mientras que se realiza una estimación del error de los modelos. La técnica más general es la que se conoce como *k-fold cross validation con validación y conjunto de test*. Se trata de una metodología autoexplicativa donde un conjunto de datos T es dividido en (k+1) bloques, 1 de estos bloques se reserva para testing y se aplica la metodología k-fold en los (k) bloques restantes. Finalmente, se evalúa el modelo sobre el conjunto de test existiendo dos opciones: construir un nuevo modelo o usar el modelo previamente ajustado.
+
 ##### Train test split
+
+
+```python
 ## Ejemplo de codigo de la web de sklearn
 import numpy as np
 import matplotlib.pyplot as plt
@@ -85,11 +90,32 @@ plt.plot(x, shapes_train, label = 'Train')
 plt.plot(x, shapes_test, label = 'Test')
 plt.title('Shapes train/testXpercentage')
 plt.legend()
+```
+
+    (150, 4) (150,)
+    
+
+
+
+
+    <matplotlib.legend.Legend at 0x1ead844d448>
+
+
+
+
+    
+![png](output_2_2.png)
+    
+
+
 ##### k-Fold
 
 * n_splits = k.
 * random_state - para obtener reproducilidad tenemos que fijar la semilla.
 * shuffle - mezcla de los datos antes de samplear para evitar sesgos de posición.
+
+
+```python
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
@@ -138,6 +164,55 @@ for k in range(5,10):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     print('Test acc: ', _acc(y_test,y_pred))
+```
+
+    Num splits:  5
+    Validation mean acc:  95.83333333333334  Std acc:  2.6352313834736525
+    Test acc:  100.0
+    Num splits:  6
+    Validation mean acc:  95.83333333333333  Std acc:  4.487637339278753
+    Test acc:  100.0
+    Num splits:  7
+    Validation mean acc:  94.95798319327731  Std acc:  3.758097441176118
+    Test acc:  100.0
+    Num splits:  8
+    Validation mean acc:  95.83333333333334  Std acc:  5.713045500334202
+    Test acc:  100.0
+    Num splits:  9
+    Validation mean acc:  94.87179487179486  Std acc:  6.280742930213279
+    Test acc:  100.0
+    
+
+
+    
+![png](output_4_1.png)
+    
+
+
+
+    
+![png](output_4_2.png)
+    
+
+
+
+    
+![png](output_4_3.png)
+    
+
+
+
+    
+![png](output_4_4.png)
+    
+
+
+
+    
+![png](output_4_5.png)
+    
+
+
 ## Ajuste de hiperparámetros:
 En ocasiones, de hecho en la mayoría de situaciones, es desconocida la configuración óptima de la estructura de ML/DL. Esta configuración generalmente es conocida como la arquitectura del modelo. Sin embargo, lo ideal es ser capaz de realizar una selección automática de esta arquitectura. Para ello lo ideal es ser capaz de explorar una serie de posibilidades lo más amplia o precisa posible. Estos parámetros que regulan o gestionan la arquitectura del modelo son los famosos *hiperparámetros".
 
@@ -162,6 +237,9 @@ Generalmente el modo de operar es:
 https://www.jeremyjordan.me/hyperparameter-tuning/
 
 Veamos un ejemplo: 
+
+
+```python
 import pandas as pd
 from datetime import date, datetime
 from sklearn.model_selection import train_test_split
@@ -205,7 +283,19 @@ plt.ylabel('depth', fontsize = 14)
 ax.set_zlabel('RMSE')
 plt.show()
 
+```
+
+    C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\ipykernel_launcher.py:37: MatplotlibDeprecationWarning: Calling gca() with keyword arguments was deprecated in Matplotlib 3.4. Starting two minor releases later, gca() will take no keyword arguments. The gca() function should only be used to get the current axes, or if no axes exist, create new axes with default keyword arguments. To create a new axes with non-default arguments, use plt.axes() or plt.subplot().
+    
+
+
+    
+![png](output_6_1.png)
+    
+
+
 Los resultados previos aunque erróneos son muy interesantes. Muestran que el RMSE, $\sqrt{\frac{\sum_{i=1}^n(y_i - \hat{y}_i)^2}{n}}$ es mínimo cuando la profundidad es más baja y a medida que la incrementamos parece que empeoramos. Es decir cuando damos más holgura al árbol para ajustarse a los datos de entrenamiento mayor de test cometemos. *¿Porque erróneos?* Simplemente no son robustos puesto que para cada par *número de árboles* *profundidad* estamos obteniendo una sola muestra y por tanto puede existir sesgo en el conjunto de datos. Adicionalmente, la validez de los hiperparámetros se ha de realizar a través de técnicas de validación cruzada (simplemente para poder fiarnos de estos resultados).
+
 ### Grid Search:
 
 El grid search se basa en definir una malla de hiperparámetros, que representa lo que tradicionalmente se conoce como espacio de búsqueda. Posteriormente, el algoritmo es entrenado con cada combinación dentro de esta malla. Obviamente, esta técnica es exhaustiva por lo que cuando el conjunto de estados es finito todas las combinaciones son eventualmente validadas y por tanto la solución encontrada siempre ideal. Sin embargo, en escenarios donde el espacio es muy grande esto no tiene sentido pues la cantidad de recursos computacionales necesarios es demasiado alta.
@@ -216,9 +306,13 @@ Random search es diferente puesto que no  explora todo el conjunto posible de hi
 
 ### Bayesian optimization: 
 (Leer con calma: https://towardsdatascience.com/a-conceptual-explanation-of-bayesian-model-based-hyperparameter-optimization-for-machine-learning-b8172278050f)
+
 ### Parameters adjustment examples:
 
 #### ***Baseline***
+
+
+```python
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -253,7 +347,31 @@ print("\nTest confusion_matrix")
 sns.heatmap(cf_matrix, annot=True, cmap='Blues')
 plt.xlabel('Predicted', fontsize=12)
 plt.ylabel('True', fontsize=12)
+```
+
+    Train accuracy: 1.0
+    Test accuracy: 0.77
+    
+    Test confusion_matrix
+    
+
+
+
+
+    Text(13.060000000000002, 0.5, 'True')
+
+
+
+
+    
+![png](output_10_2.png)
+    
+
+
 #### ***Grid Search***
+
+
+```python
 from sklearn.model_selection import GridSearchCV
 import time
 start = time.time()
@@ -287,7 +405,25 @@ plt.ylabel('True')
 end = time.time()
 diff = end - start
 print('Execution time of Grid Search (in Seconds):', diff)
+```
+
+    Optimal hyperparameter combination: {'max_depth': 12, 'min_samples_leaf': 1, 'min_samples_split': 2}
+    
+    Mean cross-validated training accuracy score: 0.8125
+    Test accuracy: 0.78
+    Execution time of Grid Search (in Seconds): 16.61903190612793
+    
+
+
+    
+![png](output_12_1.png)
+    
+
+
 #### ***Random Search***
+
+
+```python
 from sklearn.model_selection import RandomizedSearchCV
 import time
 start = time.time()
@@ -321,6 +457,21 @@ plt.ylabel('True')
 end = time.time()
 diff = end - start
 print('Execution time of Random Search (in Seconds):', diff)
+```
+
+    Optimal hyperparameter combination: {'min_samples_split': 3, 'min_samples_leaf': 1, 'max_depth': 8}
+    
+    Mean cross-validated training accuracy score: 0.805
+    Test accuracy: 0.8
+    Execution time of Random Search (in Seconds): 0.5159721374511719
+    
+
+
+    
+![png](output_14_1.png)
+    
+
+
 ## Evaluación modelos
 
 #### Evaluación de modelos de clasificación
@@ -355,6 +506,9 @@ Una de las situaciones más frecuentes en los conjuntos de datos suele ser la pr
 * Matthews Correlation - útil.
 * Precision/Recall/F1 - útil, **SI** miramos para todas las clases.
 
+
+
+```python
 import numpy as np
 import seaborn as sns
 import pandas as pd
@@ -400,6 +554,27 @@ axes[0].set_title('Precision')
 
 sns.barplot(ax=axes[1], x=df.cat, y=df.recall)
 axes[1].set_title('Recall')
+```
+
+
+
+
+    Text(0.5, 1.0, 'Recall')
+
+
+
+
+    
+![png](output_16_1.png)
+    
+
+
+
+    
+![png](output_16_2.png)
+    
+
+
 #### Evaluación modelos de regresión
 
 Para la evaluación de modelos de regresión tenemos diversas técnicas:
@@ -409,6 +584,9 @@ Para la evaluación de modelos de regresión tenemos diversas técnicas:
 En este caso buscaríamos maximizar este valor. Este se movería entorno al [0..1.0] siendo el $0$ la falta total de explicación y el $1.0$ una explicación total.
 * Root mean squared error, o RMSE - $$\sqrt{\frac{\sum_i^N (y_i - \hat{y_i})^2}{N}}$$
 * Absolute mean error, AME - $$\frac{1}{N}|\sum_i^N (y_i - \hat{y_i})|$$
+
+
+```python
 from sklearn.linear_model import LinearRegression
 import random
 import matplotlib.pyplot as plt
@@ -460,7 +638,22 @@ axs[1].plot(desv,stats_res['ame'])
 axs[1].title.set_text('AME')
 axs[2].plot(desv,stats_res['r2'])
 axs[2].title.set_text('R2')
+```
+
+
+    
+![png](output_18_0.png)
+    
+
+
+
+    
+![png](output_18_1.png)
+    
+
+
 ## Loss functions o funciones de pérdida clásicas
+
 
 
 ## Técnicas de reducción de dimensión:
@@ -475,6 +668,7 @@ Comentar las tres técnicas clásicas:
 #### Feature Selection o Selección de características.
 
 #### Feature extraction.
+
 #### Principal Component Analysis
 
 PCA or Principal component analysis is a techniques widely used in machine learning to reduce the dimensionality of our problem. The main goal of PCA is reduce the total list of features while keeps the maximum amount of information. Three of the main reasons for using PCA are:
@@ -522,6 +716,9 @@ Let's see first an easy example using the iris dataset. The steps that we are go
 
     An important feature that all symmetric matrixes hold is the orthogonality of its eigen vector. Therefore, $R\Lambda R$ is a diagonal matrix so in terms of PCA it is really convenient since that way we can say that $PC_1$ (principal component 1) explains more variance than $PC_2$ and so on, let's assume $\lambda_i = variance(f_i), \forall i \geq 1$, then $\lambda_1 > \lambda_2 > \dots > \lambda_n$. Furthermore, if $\sum_{i = 1}^n \lambda_i = var(C)$, then we can get the variance explained for each $PC$ as $varianceExplained(PC_i) = \frac{\lambda_i}{sum_{j = 1}^n \lambda_j}$
     
+
+
+```python
 # Data normalization
 def normalize(X, method = 'z'):
     if method == 'z':
@@ -596,6 +793,10 @@ def vis_3d(df, column_x = None, column_y = None, column_z = None):
 
     plt.show()
 
+```
+
+
+```python
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 import numpy as np
@@ -626,6 +827,34 @@ vis_2d(iris_df, 'PC1','PC2')
 vis_grid(iris_df, 'PC1','PC2','species')
 vis_3d(iris_df, 'PC1','PC2','target')
 
+```
+
+
+    
+![png](output_23_0.png)
+    
+
+
+
+    
+![png](output_23_1.png)
+    
+
+
+
+    
+![png](output_23_2.png)
+    
+
+
+
+    
+![png](output_23_3.png)
+    
+
+
+
+```python
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -660,6 +889,44 @@ plot_PCA(data_matrix, 'Log-Normal')
 
 data_matrix = np.random.negative_binomial(1, 0.01, N*P).reshape(N, P)
 plot_PCA(data_matrix, 'Negative Binomial')
+```
+
+
+    
+![png](output_24_0.png)
+    
+
+
+
+    
+![png](output_24_1.png)
+    
+
+
+
+    
+![png](output_24_2.png)
+    
+
+
+
+    
+![png](output_24_3.png)
+    
+
+
+
+    
+![png](output_24_4.png)
+    
+
+
+
+    
+![png](output_24_5.png)
+    
+
+
 #### Gradiente descendente:
 
 Se trata de una técnica de búsqueda de mínimos (susceptible a encontrar mínimos locales) en funciones. Es utilizado mucho en el campo de machine learning (ML) y deep learning (DL) para la minimización de funciones de coste. Clásicamente la típica función de error es mínimos cuadrados:$$armin \sum_{i = 1}^{N}(y_i - \hat{y_i})^2$$
@@ -702,7 +969,11 @@ Ejemplos de gradiente:
   <p align="center">
     <img width="460" height="300" src=figures/quasi_convex.PNG>
   </p>
+
 ##### Convexidad
+
+
+```python
 import matplotlib.pyplot as plt
 
 x = list(range(-5,6))
@@ -716,8 +987,26 @@ for cut in cuts:
     plt.plot(x,cut)
 plt.plot(x, y_2)
 
+```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x25482dca8c8>]
+
+
+
+
+    
+![png](output_27_1.png)
+    
+
+
 ##### Diferenciabilidad/Derivabilidad
 
+
+
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -736,7 +1025,25 @@ y_2_d = list(map(lambda x: np.cosh(x),x))
 plt.subplot(1,2,2)
 plt.plot(y_2)
 plt.plot(y_2_d)
+```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x254fa069548>]
+
+
+
+
+    
+![png](output_29_1.png)
+    
+
+
 ##### Saddle points
+
+
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -746,6 +1053,21 @@ y_2 = list(map(lambda x: x**4 - 10*x**3 + 2,x))
 d_y_2 = list(map(lambda x: 4*x**3 - 30*x**2 ,x))
 plt.plot(x,y_2)
 plt.plot(x,d_y_2)
+```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x254fa3c18c8>]
+
+
+
+
+    
+![png](output_31_1.png)
+    
+
+
 ##### Algoritmo de descenso de gradiente:
 
 El algoritmo es super sencillo y consiste en ir redefiniendo el punto de estudio a medida que seguimos el gradiente de la función $f$ de error. Es decir, la idea es iterativamente actualizar nuestro punto $x$ de estudio desplazando este siguiendo el gradiente del error ponderado por un $\mu$ o ratio de aprendizaje.
@@ -773,6 +1095,9 @@ Para evitar cálculos de inversas:
 $$x_{n+1}f(x_n) = x_{n}f(x_n) - f(x_n)$$
 
 
+
+
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -817,6 +1142,30 @@ for learn_rate in learn_rates:
         plt.plot(points[i],y_points[i],'bo')
         if i < len(points) - 1:
             plt.plot(points[i:i+2], y_points[i:i+2])
+
+```
+
+
+    
+![png](output_33_0.png)
+    
+
+
+
+    
+![png](output_33_1.png)
+    
+
+
+
+    <Figure size 432x288 with 0 Axes>
+
+
+
+    
+![png](output_33_3.png)
+    
+
 
 ## Regresión (estadística)
 
@@ -864,6 +1213,9 @@ $$\frac{\delta e}{\delta n} = \frac{\delta e}{\delta \hat{y_i}}\frac{\delta \hat
 En este caso tenemos dos parámetros a ajustar $m$ y $n$ por tanto necesitamos dos funciones de ajuste:$$m = m + \mu_1 \frac{\delta e}{\delta m}$$ $$ n = n + \mu_2 \frac{\delta e}{\delta n}$$
 Donde para cada parámetro $m$ y $n$ tenemos un ratio de aprendizaje diferente $\mu_1$ y $\mu_2$ respectivamente.
 
+
+
+```python
 import random
 import matplotlib.pyplot as plt
 import numpy as np
@@ -883,9 +1235,27 @@ def get_data(n, mean, variance):
     return x,y
 x,y = get_data(50, 10,5)
 plt.scatter(x,y)
+```
+
+
+
+
+    <matplotlib.collections.PathCollection at 0x1e1f759db48>
+
+
+
+
+    
+![png](output_35_1.png)
+    
+
+
 Para implementar el descenso de gradiente para la regresión lineal vamos a usar el método de descenso de gradiente previamente implementado pero cambiaremos que en esta ocasión ajusta dos parámetros que trabajan de manera simultánea:
 $$n_{i+1} = n + \mu_1  \frac{2}{N}\sum_{i = 1}^{N}(m_ix_i+n_i - y_i) $$
 $$m_{i+1} = m + \mu_2  \frac{2}{N}\sum_{i = 1}^{N}(m_ix_i+n_i - y_i)x_i $$
+
+
+```python
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -944,6 +1314,45 @@ plt.figure()
 plt.title('Error adjustment (iterationXerror)')
 plt.scatter(tols, errors)
 plt.plot(tols, errors)
+```
+
+
+
+
+    [<matplotlib.lines.Line2D at 0x1e1e7135408>]
+
+
+
+
+    
+![png](output_37_1.png)
+    
+
+
+
+    
+![png](output_37_2.png)
+    
+
+
+
+    
+![png](output_37_3.png)
+    
+
+
+
+    
+![png](output_37_4.png)
+    
+
+
+
+    
+![png](output_37_5.png)
+    
+
+
 ### GLM - Regresión lineal generalizada
 Los *modelos lineales generalizados* son modelos de regresión avanzados que permiten a los errores (residuos) contener una distribución diferente de la normal (requerida en los modelos de regresión tipo el lineal). Típicamente la regresión lineal se asocia con 4 condiciones fuertes:
 * Linealidad de la respuesta frente a las variables predictoras.
@@ -958,6 +1367,9 @@ Es claro que los modelos de regresión lineal generalizada hay dos que clarament
 Elementos de las GLM:
 * Función de enlace o link function - es utilizada para "transformar" una variable respuesta a un modelo ajustable como si de un modelo lineal se tratase.
 
+
+
+```python
 # Ejemplos no lineales:
 import numpy as np
 import seaborn as sns
@@ -973,10 +1385,38 @@ plt.figure()
 sns.lineplot(X,np.sqrt(X))
 plt.figure()
 sns.scatterplot(X, y_norm_random(X))
+```
+
+
+
+
+    <AxesSubplot:>
+
+
+
+
+    
+![png](output_39_1.png)
+    
+
+
+
+    
+![png](output_39_2.png)
+    
+
+
+
+    
+![png](output_39_3.png)
+    
+
+
 **Hipótesis de los GLM**:
 * Datos deben ser independientes
 * La variable respuesta y, para cada X, no tiene que estar distribuida normalmente pero esta ha de seguir una distribución de una familia exponencial (binomial, poisson, muntinomial, etc).
 * La variable transformada a través de la función de enlace si que debe tener una relación lineal con las variables independientes.
+
 #### Ajustes de parámetros basados en probabilidades
 A estas alturas ya casi resulta anecdótico comentar esto pero el ajuste de los parámetros de los parámetros consiste en determinar el valor de ciertas componentes desconocidas de un modelo a partir de los datos de una muestra. Para ello se hace uso de una serie de funciones típicamente conocidas como *loss functions* que miden como de lejos estamos de nuestro objetivo. Esto ya se comentó previamente en redes de neuronas y en regresión lineal y se resolvía el problema a través de mínimos cuadrados y descenso de gradiante. Sin embargo, en sistemas GLM el método de ajuste de los parámetros se realiza a través de ***Máxima verosimilitud***. En la siguiente secciones realizaremos dos ajustes de parámetros diferentes ambos basados en verosimilitud: estimación de máxima verosimilitud, MLE, y maxima verosimilitud posteriori, MAP.
 
@@ -988,6 +1428,7 @@ En la estimación máxima verosimil se busca estimar un parámetro determinado t
 * Regresión de Poisson sabemos que cada valor de $y_i \sim Po(\lambda_i)$ por tanto $E[y_i|x_i] = \lambda_i$, pues $E[Po(\lambda_i)] = \lambda_i$.
 
 ***Verosimilitud a posteriori***
+
 #### Regresión logística
 La regresión logística es una regresión caracterízada porque los valores de su variable respuesta se encuentran en el rango $[0\dots 1]$. Es común pensar que la regresión logística solo vale para datos binarios o dicotomías pero puede ser generalizada a un modelo multiclasificación. Cabe recordar que la regresión logística permite predecir valores en el rango $[0 \dots 1]$, es decir permite predecir probabilidades de pertenencia/suceso/etc. Por tanto, si discretizamos el rango $[0 \dots 1]$ en 10 subniveles y cambiamos el valor predicho por clase en la que cae una predicción podemos generalizar un modelo multiclase. 
 
@@ -1013,6 +1454,9 @@ $$\beta_0 + \sum_i\beta_i\cdot x_i = ln(\frac{Y}{1 - Y}) = logit(Y)$$
 
 A partir de los coeficientes $\beta_i, i \geq 1$ se puede obtener la tasa de cambio en los odds por feature como: $e^{\beta_i}$.
 
+
+
+```python
 import numpy as np
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression
@@ -1041,24 +1485,60 @@ clf = LogisticRegression(random_state=6543210).fit(X, Y)
 X = X.reshape((1,-1))
 Y = logit(X,clf.coef_[0][0], clf.intercept_[0])
 sns.lineplot(X[0],Y[0], color = 'green')
+```
+
+
+
+
+    <AxesSubplot:>
+
+
+
+
+    
+![png](output_43_1.png)
+    
+
+
 ***Estimación máximo verosimil regresión logística***, atendemos a que: $$p_i = E[y_i|x_i] = \frac{1}{1 + e^{-(\beta_0 + \sum_i x_i\beta_i)}}$$ por tanto de aquí y de la definición previa sabemos que: $$P(Y|\theta) = \prod_i P(y_i|\theta) = \prod p_i(1- p_i) = \prod_i \frac{1}{1 + e^{-(\beta_0 + \sum_j x_j^i\beta_j)}} (1 - \frac{1}{1 + e^{-(\beta_0 + \sum_j x_j^i\beta_j)}})$$ Dadas las propiedades de las probabilidades ($p>0$) podemos aplciar logaritmos y simplificar la ecuación como:
 $$p = P(Y | \theta) = \sum_i ln(p_i) + \sum_i ln((1- p_i))$$ 
 Si derivamos e igualamos a 0:
 $$\frac{\delta p}{\delta \beta_0} = \sum_i (y_i - p_i) = 0$$
 $$\frac{\delta p }{\delta \beta_i} = \sum_i (y_i - p_i)x_i = 0$$
 Generalmente, estas operaciones no tienen solución y es necesario recurrir a métodos de estimación de soluciones como Newton-Raphson, punto fijo, etc.
+
 #### Regresión de Poisson
 ***Pending!***
+
+
+```python
+
+```
 
 #### Regresión cuantil
 ***Pending!***
 
+
+```python
+
+```
+
 ## Machine Learning
+
 ### Supervised Learning
+
 #### SVM - El truco del kernel
 
+
 #### UnSupervised Learning
+
 #### Reinforcement Learning
+
+
+```python
+
+```
+
 
 
 ## Deep Learning
@@ -1113,6 +1593,7 @@ Las redes de neuronas nos permiten enfrentar problemas muy diversos como:
 * Clasificación - dada una muestra de datos S con ejemplos etiquetados trataremos de ajustar una función $f(x)$ tal que dada una entrada $x$ produzca un valor $y$ asociado. En este campo existe también un concepto como es el umbral de clasificación que es utilizado para designar una clase dada una muestra de entrada $x$, de hecho en clasificaciones binarias existe el concepto, heredado de las telecomunicaciones, de la curva ROC. Esta permite mostrar en una gráfica la precisión y 1-especificidad bajo diferentes umbrales de corte [0..1]. Es evidente que este tipo de aprendizaje es conocido generalmente como **aprendizaje supervisado**.
 * Clustering - las redes de neuronas profundas, o el conocido deep learning, permite la extracción de patrones de los conjuntos de datos sin necesidad de que exista ninguna etiqueta. Este tipo de aprendizaje se conoce como **aprendizaje no supervisado**. Como norma general los sistemas de IA, y de aprendizaje automático, se benefician de la cantidad de datos por tanto este tipo de modelos tienen el potencial de llegar a ser muy precisos.
 * Regresión o predicción de valores numéricos - de igual manera que se puede predecir una clase (problemas de clasificación) podemos predecir un valor $y$ o valor esperado a partir de información pasada. De hecho, al menos desde mi punto de vista, es más natural esperar y querer obtener un valor esperado de regresión que una clase particular. Este tipo de problemas igual que en modelos de regresión generales como los: gam (generalized additive models), glm (generalize lineal models), lm (lineal models), splines, plr (polynomial lineal regression) and so on; se nutren de información pasada y tratan en base a esta de dar un valor futuro esperado. A mayores ofrecen y en contraste con metodologías clásicas de estudio de series de tiempo (ARIMA, ARMA) estas permiten la inclusión de más features abstrayéndonos así de la componente explícitamente temporal.
+
 #### Elementos redes de neuronas
 
 Una red neuronal es un modelo simplificado que emula el modo en que el cerebro humano procesa la información: Funciona simultaneando un número elevado de unidades de procesamiento interconectadas que parecen versiones abstractas de neuronas. Dicho de manera sencilla una neurona es simplemente una ubicación donde la "computación" ocurre, realmente cada neurona tiene asignada una determinada función de activación y dicha función de activación se calcula para los valores de entrada.
@@ -1184,6 +1665,7 @@ Por tanto que elementos tenemos:
     Punto importante e inmediato, el ajuste de parámetros es individual pero dependiente, es decir cada peso $w_{ij}$ presenta su fórmula de actualización que debido a como se construyen las predicciones es independiente del resto. Pero sin embargo el ajuste es dependiente puesto que cambios en un peso implican cambios en la predicción general. Por tanto obtenemos la expresión: 
     $$w^{k+1}_{ij} = w^k_{ij} - {\mu}(-2x_i(y_i - \hat{y_i}))$$ 
     Ajustando así los pesos de las distintas neuronas de la red.
+
 ***¿Tiene el backpropagation alguna limitación en deep learning?*** Existe un concepto sonado que se denomida *Vanishing and Exploding Gradient* lo que significa desaparición o explosión del gradiente. Cuando estamos ante un caso con un número de capas muy grande (redes de neuronas densas) ocurre que el gradiente puede desaparecer (si la pendiente del error es muy baja) o explotar (en caso contrario) a medida que backtrackeamos en la red. De aquí surge la necesidad y utilidad de las ***redes de neuronas recurrentes***.
 
 ***¿Tienen las ANN alguna otra limitación?*** Simple y claro, como procesas imágenes en una ANN. 
@@ -1191,6 +1673,7 @@ Por tanto que elementos tenemos:
     * primer problema ¿como se procesan imágenes de diferentes tamaños? Presentarán vectores diferentes y por tanto el número de parámetros de entrenamiento crece.
     * información espacial - se pierde la información espacial cuando vectorizamos, especialmente si lo hacemos de manera independiente del tamaño de la imagen.
 Solución: ***redes de convolución (CNN)***
+
 #### Ajustes de Neural networks clásicos:
 Stochastic Gradient Descent, Adam, or L-BFGS.
 
@@ -1218,6 +1701,9 @@ Stochastic Gradient Descent, Adam, or L-BFGS.
         * Siempre son dos capas
         * Número de neuronas por capa
     * random_state - seed.
+
+
+```python
 from __future__ import absolute_import, division, print_function
 import warnings
 warnings.filterwarnings("ignore")
@@ -1273,7 +1759,31 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 cm = confusion_matrix(y_test, y_pred)    
 sns.heatmap(cm, annot=True)
+```
+
+
+    
+![png](output_60_0.png)
+    
+
+
+
+
+
+    <AxesSubplot:>
+
+
+
+
+    
+![png](output_60_2.png)
+    
+
+
 * Ajuste manual de una ANN para la regresión lineal:
+
+
+```python
 import random
 import matplotlib.pyplot as plt
 import numpy as np
@@ -1345,7 +1855,20 @@ plt.scatter(x,y)
 
 N = net([2,4])
 N.fit(x,y)
+```
+
+    [[<__main__.neuron object at 0x0000018A8030AF08>, <__main__.neuron object at 0x0000018A80321148>], [<__main__.neuron object at 0x0000018A80321208>, <__main__.neuron object at 0x0000018A80321288>, <__main__.neuron object at 0x0000018A803212C8>, <__main__.neuron object at 0x0000018A80321308>], [<__main__.neuron object at 0x0000018A802A9D88>]]
+    [[[1.0], [1.0]], [[1.0, 1.0], [1.0, 1.0], [1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0, 1.0, 1.0]]]
+    
+
+
+    
+![png](output_62_1.png)
+    
+
+
 #### Recurrent Neural Networks (RNN)
+
 De manera introductoria direcmos que las RNN son un tipo de redes de neurona que recuerdan sus entradas, debido a que presentan mecanismos de memoria interna (que veremos más adelante). Los principales usos de las RNNs se encuentra en el *Natural Language Processing* y en tratamiento de *Time Series*.
 
 Las RNN recuerdan las partes más *importantes* de la entrada que recibieron, lo que les permite desgranar el trigo de la paja de una manera bastante atinada. Por tanto, este tipo de redes es especialmente interesante para trabajar sobre datos de carácter secuencial (datos ordenados o datos donde existe un orden preestablecido por ejemplo el DNA) donde el momento en el que toma un valor es más importante que el valor en si tomado en ese instante específico, es decir, que el tiempo y la secuencialidad son de suma importancia.
@@ -1371,6 +1894,7 @@ Además en este contexto encontramos diferentes tipos de RNNs como:
 <p align="center">
     <img src="figures/one_many_many.PNG" />
 </p>
+
 ##### Keras, RNN y LSTM
 
 Esto es algo raro de primeras puesto que *a priori* ajustar estos modelos debería ser cosa de 5 minutos. Sin embargo, primero es necesario entender como estos reciben los datos. Para ajustar este tipo de modelos es necesario especificar 2 cosas:
@@ -1424,6 +1948,9 @@ Por ejemplo:
       \end{bmatrix}
     \end{gather}
   \end{align}
+
+
+```python
 # Ejemplos - adaptar para los genomas
 import numpy as np
 import matplotlib.pyplot as plt
@@ -1521,6 +2048,48 @@ brownian_prediction = sc.inverse_transform(brownian_prediction_trans)
 ## Plot results
 plot_predictions(test,brownian_prediction)
 return_rmse(test, brownian_prediction)
+```
+
+
+    
+![png](output_66_0.png)
+    
+
+
+    (680, 60, 1)
+    Model: "sequential_44"
+    _________________________________________________________________
+    Layer (type)                 Output Shape              Param #   
+    =================================================================
+    lstm_61 (LSTM)               (None, 60, 50)            10400     
+    _________________________________________________________________
+    dropout_37 (Dropout)         (None, 60, 50)            0         
+    _________________________________________________________________
+    lstm_62 (LSTM)               (None, 60, 50)            20200     
+    _________________________________________________________________
+    dropout_38 (Dropout)         (None, 60, 50)            0         
+    _________________________________________________________________
+    lstm_63 (LSTM)               (None, 50)                20200     
+    _________________________________________________________________
+    dropout_39 (Dropout)         (None, 50)                0         
+    _________________________________________________________________
+    dense_44 (Dense)             (None, 1)                 51        
+    =================================================================
+    Total params: 50,851
+    Trainable params: 50,851
+    Non-trainable params: 0
+    _________________________________________________________________
+    
+
+
+    
+![png](output_66_2.png)
+    
+
+
+    The root mean squared error is 0.11923566081110332.
+    
+
 ### Diferencia con los HMM
 
 Una duda que a mi me surgió en el momento en el que empecé a estudiar las RNN (LSTM) es, ¿que los diferencia de modelos estocásticos tradicionales como los HMM (Hiden Markov Models)? Veamos que es cada cosa:
@@ -1585,6 +2154,7 @@ $$t = 2,\alpha = P(O = (o_1,o_2)|\lambda)$$
 $$\dots$$
 $$t = T,\alpha = P(O = (o_1,o_2,\dots,o_T)|\lambda)$$
 
+
 #### ¿De donde surge la necesidad de las RNN?
 
 En una metodología *feed forward* tradicional se asume que el orden de los datos es independiente, es decir, *time does not matter* pero en muchos casos como series de tiempo, NLP, reconocimiento del habla o procesamiento de DNA el orden de los datos cumple un factor determinante. Para solventar esto surgen las redes de neuronas recurrentes que usan la información de predicciones previas para ajustar predicciones futuras:
@@ -1643,9 +2213,13 @@ $$\frac{\delta (y - w^{10}f^{10}(w^{9}f^9(w^8f^8(\dots w_1f^1(x))))))}{\delta w_
 Aplicando la regla de la cadena llegaríamos a:
 $$\frac{\delta f^{10}}{\delta f^9}\dots\frac{\delta f^1 }{\delta w_1}$$
 
+
 #### Convolutional neural networks (CNN)
 
 
+
+
+```python
 import tensorflow as tf
 import warnings
 warnings.filterwarnings("ignore")
@@ -1673,6 +2247,14 @@ for i in range(25):
     # which is why you need the extra index
     plt.xlabel(class_names[train_labels[i][0]])
 plt.show()
+```
+
+
+    
+![png](output_70_0.png)
+    
+
+
 ## Manejo del Overfitting
 
 Se trata de uno de los problemas más típicos de errores o sesgos en los sistemas ML/DL.
@@ -1701,6 +2283,9 @@ Se trata de uno de los problemas más típicos de errores o sesgos en los sistem
     * Opción sobre epocs: medir en cada iteración del algoritmo los resultados o la calidad de los ajsutes de validación y ver si efectivamente los resultados se estancan o si empeoran:
 
 ***Ejemplo***
+
+
+```python
 # Examples Python
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
@@ -1737,14 +2322,30 @@ pyplot.plot(values, train_scores, '-o', label='Train')
 pyplot.plot(values, test_scores, '-o', label='Test')
 pyplot.legend()
 pyplot.show()
+```
+
+
+    
+![png](output_72_0.png)
+    
+
+
 #### Ensemble learning:
 
 * Bagging
 * Boosting
 * Stacking
 
+
+
+```python
 # Examples Python
+```
+
 ## Prácticas ml
+
+
+```python
 from __future__ import absolute_import, division, print_function
 import warnings
 
@@ -1772,6 +2373,8 @@ from scipy import stats
 import numpy as np
 import time
 import matplotlib.colors as mcolors
+```
+
 #### Grid Search CV
 
 * Logistico
@@ -1785,6 +2388,9 @@ Well known measures:
 
 
 
+
+
+```python
 # Easy tests:
 def _easy_trials(df, classifier = 'reg_log', target_column = 'status'):
     # Split data
@@ -1795,6 +2401,10 @@ def _easy_trials(df, classifier = 'reg_log', target_column = 'status'):
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.5, random_state=0)
     
     
+```
+
+
+```python
 # Ajustes basados en CVGridSearch
 def _check_on_CVGridSearch(df, target_column = None):
     # Set seed
@@ -1838,7 +2448,12 @@ def _check_on_CVGridSearch(df, target_column = None):
             clf = GridSearchCV(model, class_params[classifier], scoring=score)
             clf.fit(X_train, y_train)
             ## Resultados clf
+```
+
 #### Visualizacion
+
+
+```python
 def heatmap(mat, shape = (12,10)):
     plt.figure(figsize = shape)
     sns.heatmap(mat, annot = True, cmap = plt.cm.Reds)
@@ -1857,6 +2472,8 @@ def show(xlabel = 'Hz', ylabel = 'Time'):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.show()
+```
+
 #### Further visualization
 
 * Kde -> kernel density estimation $f(X) = \frac{1}{nh}\sum_{i = 1}^{n} K(\frac{x - X_i}{h})$
@@ -1865,6 +2482,9 @@ def show(xlabel = 'Hz', ylabel = 'Time'):
     * h bandwith (window size)
     * n number cases in sample
     * K kernel density function (integrate 1, $f(x) \geq 0$, $f_X = \frac{dF}{dx}$ class $C^1$)
+
+
+```python
 # Further visualization:
 def _histo(df, column, y_column = None, hue = 'status', method = "kde", distribution = None, join_plots = None):
     if join_plots is None:
@@ -1898,6 +2518,8 @@ def full_visualization(df):
     g.map_upper(sns.histplot)
     g.map_lower(sns.kdeplot, fill=True)
     g.map_diag(sns.histplot, kde=True)
+```
+
 #### Preprocess:
 
 * Remove correlated variables:
@@ -1916,6 +2538,9 @@ def full_visualization(df):
     * Z-normalization:  $z(x) = \frac{x - \mu}{\sigma}$
     * Min-max/ linear scaling: $ls(x) = \frac{(x - oldMin)newMax}{oldMax - oldMin} + newMin$
     * log scaling: $l(x) = log(x)$
+
+
+```python
 # Preprocess
 def _remove_cor_features(df, cor_mat):
     already_removed = []
@@ -1969,6 +2594,10 @@ def _preprocess(df, label = 'status'):
     df_norm = df.apply(_normalize, axis = 1, method = 'Z')
     df_norm[label] = y_val
     return df_norm
+```
+
+
+```python
 if __name__ == '__main__':
     df_parkinson = pd.read_csv('data/01.parkinsons.csv')
     df_parkinson.drop('name', axis = 1, inplace = True)
@@ -1979,10 +2608,21 @@ if __name__ == '__main__':
     #print(df_parkinswon.describe(include = 'all'))
     #print(df_parkinson.head())
     #_check_on_CVGridSearch(df_parkinson, target_column='status')
+```
+
+
+    
+![png](output_86_0.png)
+    
+
+
 #### Ajuste modelos sencillos:
 
 
 
+
+
+```python
 #Borja :)
 import pandas as pd
 import numpy as np
@@ -1996,8 +2636,16 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+```
+
+
+```python
 def read_csv(path):
     return pd.read_csv(path)
+```
+
+
+```python
 def ETL(df):
     # Cuidado!
     def __map(df, columns = ['Sex','Passenger Class']):
@@ -2021,6 +2669,10 @@ def ETL(df):
     df = df.drop(['Survived','Name'], axis = 1)
     x = df.values
     return x,y
+```
+
+
+```python
 def titanic_optimize_parameter(X, y, method = 'knn', params = {'min_k':1,'max_k':30}):
     # Normalization
     scaler = preprocessing.StandardScaler().fit(X)
@@ -2075,6 +2727,10 @@ def titanic_optimize_parameter(X, y, method = 'knn', params = {'min_k':1,'max_k'
     model.fit(X_train, y_train)
     predict = model.predict(X_test)
     print(classification_report(y_test, predict))
+```
+
+
+```python
 if __name__ == '__main__':
     # Ej 1:
     df = read_csv('data/titanic_data.csv')
@@ -2084,3 +2740,253 @@ if __name__ == '__main__':
     titanic_optimize_parameter(X,y, method = 'gbn')
     titanic_optimize_parameter(X,y, method = 'logreg')
     titanic_optimize_parameter(X,y, method = 'dtree')
+```
+
+    ['Passenger Class' 'Name' 'Sex' 'Age' 'No of Siblings or Spouses on Board'
+     'No of Parents or Children on Board' 'Ticket Number' 'Passenger Fare'
+     'Cabin' 'Port of Embarkation' 'Life Boat' 'Survived']
+    Columns check:  ['Passenger Class' 'Name' 'Sex' 'Age' 'No of Siblings or Spouses on Board'
+     'No of Parents or Children on Board' 'Passenger Fare' 'Survived']
+    Number of null rows (Passenger Fare):  0
+    Number of null rows (Age):  0
+    Fitting 5 folds for each of 29 candidates, totalling 145 fits
+    {'mean_fit_time': array([0.00259881, 0.00260019, 0.00260587, 0.00201249, 0.00239553,
+           0.0021996 , 0.00300794, 0.0025949 , 0.00279994, 0.00319877,
+           0.00300736, 0.00319486, 0.00238633, 0.00260973, 0.00259914,
+           0.00241451, 0.00260606, 0.0024117 , 0.00261707, 0.00298944,
+           0.00340242, 0.00300555, 0.00219159, 0.00198765, 0.00220799,
+           0.00280771, 0.00239964, 0.00319004, 0.00320015]), 'std_fit_time': array([4.89044836e-04, 7.99656170e-04, 4.94114976e-04, 1.25996944e-05,
+           4.97405971e-04, 4.00642752e-04, 8.82929178e-04, 4.82308078e-04,
+           3.99537339e-04, 7.45363419e-04, 6.34049984e-04, 4.02101353e-04,
+           4.75673328e-04, 4.78173339e-04, 8.06856388e-04, 4.78091911e-04,
+           4.94960843e-04, 4.80278794e-04, 4.92284299e-04, 6.42004483e-04,
+           1.20228140e-03, 6.31464818e-04, 3.89654783e-04, 1.54530556e-05,
+           3.96895116e-04, 7.50249690e-04, 4.90408864e-04, 7.45982329e-04,
+           9.72820513e-04]), 'mean_score_time': array([0.00942421, 0.01040511, 0.01401482, 0.01159592, 0.01119857,
+           0.01300416, 0.01099367, 0.01060133, 0.01260624, 0.013201  ,
+           0.0119988 , 0.01179895, 0.01122274, 0.01218777, 0.01139426,
+           0.01219211, 0.01119351, 0.01138854, 0.01198969, 0.01300464,
+           0.01659737, 0.01319461, 0.01200728, 0.0114121 , 0.01139169,
+           0.01159859, 0.013801  , 0.01360288, 0.01498723]), 'std_score_time': array([4.82475161e-04, 4.95833574e-04, 2.53294221e-03, 2.24432370e-03,
+           9.86391290e-04, 6.14586173e-04, 6.51153840e-04, 8.09103472e-04,
+           2.32736679e-03, 1.17333999e-03, 1.41492550e-03, 1.72609760e-03,
+           7.50724138e-04, 1.93107865e-03, 4.82574965e-04, 1.94353895e-03,
+           4.03940518e-04, 4.76869296e-04, 1.50740889e-05, 1.66990192e-03,
+           1.35561059e-03, 2.03073301e-03, 1.54298129e-03, 4.94911016e-04,
+           8.02221564e-04, 1.02806984e-03, 1.59280054e-03, 2.05267463e-03,
+           1.77420352e-03]), 'param_n_neighbors': masked_array(data=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                       17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+                 mask=[False, False, False, False, False, False, False, False,
+                       False, False, False, False, False, False, False, False,
+                       False, False, False, False, False, False, False, False,
+                       False, False, False, False, False],
+           fill_value='?',
+                dtype=object), 'params': [{'n_neighbors': 1}, {'n_neighbors': 2}, {'n_neighbors': 3}, {'n_neighbors': 4}, {'n_neighbors': 5}, {'n_neighbors': 6}, {'n_neighbors': 7}, {'n_neighbors': 8}, {'n_neighbors': 9}, {'n_neighbors': 10}, {'n_neighbors': 11}, {'n_neighbors': 12}, {'n_neighbors': 13}, {'n_neighbors': 14}, {'n_neighbors': 15}, {'n_neighbors': 16}, {'n_neighbors': 17}, {'n_neighbors': 18}, {'n_neighbors': 19}, {'n_neighbors': 20}, {'n_neighbors': 21}, {'n_neighbors': 22}, {'n_neighbors': 23}, {'n_neighbors': 24}, {'n_neighbors': 25}, {'n_neighbors': 26}, {'n_neighbors': 27}, {'n_neighbors': 28}, {'n_neighbors': 29}], 'split0_test_score': array([0.5       , 0.52671756, 0.51526718, 0.51526718, 0.50763359,
+           0.52290076, 0.51526718, 0.53435115, 0.52671756, 0.54961832,
+           0.53435115, 0.56870229, 0.5648855 , 0.57633588, 0.57251908,
+           0.58015267, 0.58396947, 0.58396947, 0.58396947, 0.58015267,
+           0.58396947, 0.58015267, 0.58015267, 0.57633588, 0.57633588,
+           0.59160305, 0.58396947, 0.58778626, 0.59160305]), 'split1_test_score': array([0.69465649, 0.80534351, 0.74427481, 0.79389313, 0.76717557,
+           0.77099237, 0.77099237, 0.76717557, 0.73664122, 0.79007634,
+           0.77862595, 0.83206107, 0.8129771 , 0.84732824, 0.83587786,
+           0.83969466, 0.83587786, 0.83969466, 0.83969466, 0.84351145,
+           0.84351145, 0.84351145, 0.83969466, 0.84351145, 0.84351145,
+           0.84351145, 0.84351145, 0.84351145, 0.84351145]), 'split2_test_score': array([0.67175573, 0.66030534, 0.67175573, 0.6870229 , 0.73282443,
+           0.70610687, 0.74045802, 0.71374046, 0.77099237, 0.78244275,
+           0.78625954, 0.77099237, 0.80534351, 0.77480916, 0.79770992,
+           0.79007634, 0.79770992, 0.78244275, 0.78625954, 0.76717557,
+           0.78244275, 0.76717557, 0.79389313, 0.76335878, 0.77480916,
+           0.75954198, 0.76717557, 0.75572519, 0.77099237]), 'split3_test_score': array([0.67816092, 0.66666667, 0.68582375, 0.6743295 , 0.67049808,
+           0.67049808, 0.68582375, 0.66666667, 0.67816092, 0.68582375,
+           0.69348659, 0.69731801, 0.72030651, 0.70114943, 0.72413793,
+           0.72030651, 0.71264368, 0.72796935, 0.70881226, 0.70114943,
+           0.70881226, 0.70881226, 0.69731801, 0.70498084, 0.69348659,
+           0.69348659, 0.68965517, 0.69731801, 0.68965517]), 'split4_test_score': array([0.64367816, 0.63601533, 0.66666667, 0.651341  , 0.70881226,
+           0.64750958, 0.66666667, 0.63984674, 0.64750958, 0.63601533,
+           0.651341  , 0.651341  , 0.64750958, 0.64367816, 0.64367816,
+           0.63984674, 0.63601533, 0.63601533, 0.63984674, 0.63218391,
+           0.63601533, 0.63218391, 0.62835249, 0.63218391, 0.62835249,
+           0.62835249, 0.62835249, 0.63218391, 0.63218391]), 'mean_test_score': array([0.63765026, 0.65900968, 0.65675763, 0.66437074, 0.67738879,
+           0.66360153, 0.6758416 , 0.66435612, 0.67200433, 0.6887953 ,
+           0.68881285, 0.70408295, 0.71020444, 0.70866017, 0.71478459,
+           0.71401538, 0.71324325, 0.71401831, 0.71171653, 0.70483461,
+           0.71095025, 0.70636717, 0.70788219, 0.70407417, 0.70329911,
+           0.70329911, 0.70253283, 0.70330496, 0.70558919]), 'std_test_score': array([0.07076431, 0.08888627, 0.07595627, 0.08920762, 0.09053897,
+           0.08178351, 0.08854029, 0.07812553, 0.08452538, 0.09076616,
+           0.09257068, 0.09166316, 0.09461919, 0.09528202, 0.09687443,
+           0.09491084, 0.09471018, 0.093454  , 0.09319665, 0.09376028,
+           0.09426302, 0.09375015, 0.09749237, 0.09427993, 0.0965465 ,
+           0.09056716, 0.09357295, 0.09038181, 0.09158078]), 'rank_test_score': array([29, 27, 28, 24, 21, 26, 22, 25, 23, 20, 19, 13,  7,  8,  1,  3,  4,
+            2,  5, 12,  6, 10,  9, 14, 17, 16, 18, 15, 11])}
+    KNeighborsClassifier(n_neighbors=15)
+                  precision    recall  f1-score   support
+    
+               0       0.85      0.92      0.88       249
+               1       0.83      0.73      0.78       144
+    
+        accuracy                           0.85       393
+       macro avg       0.84      0.82      0.83       393
+    weighted avg       0.85      0.85      0.84       393
+    
+    Fitting 5 folds for each of 1 candidates, totalling 5 fits
+    GaussianNB()
+                  precision    recall  f1-score   support
+    
+               0       0.85      0.87      0.86       249
+               1       0.77      0.73      0.75       144
+    
+        accuracy                           0.82       393
+       macro avg       0.81      0.80      0.80       393
+    weighted avg       0.82      0.82      0.82       393
+    
+    Fitting 5 folds for each of 28 candidates, totalling 140 fits
+    
+
+    C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_validation.py:372: FitFailedWarning: 
+    105 fits failed out of a total of 140.
+    The score on these train-test partitions for these parameters will be set to nan.
+    If these failures are not expected, you can try to debug them by setting error_score='raise'.
+    
+    Below are more details about the failures:
+    --------------------------------------------------------------------------------
+    70 fits failed with the following error:
+    Traceback (most recent call last):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_validation.py", line 680, in _fit_and_score
+        estimator.fit(X_train, y_train, **fit_params)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\linear_model\_logistic.py", line 1461, in fit
+        solver = _check_solver(self.solver, self.penalty, self.dual)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\linear_model\_logistic.py", line 449, in _check_solver
+        % (solver, penalty)
+    ValueError: Solver lbfgs supports only 'l2' or 'none' penalties, got l1 penalty.
+    
+    --------------------------------------------------------------------------------
+    35 fits failed with the following error:
+    Traceback (most recent call last):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 57, in _wrapfunc
+        return bound(*args, **kwds)
+    TypeError: '<' not supported between instances of 'str' and 'int'
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_validation.py", line 680, in _fit_and_score
+        estimator.fit(X_train, y_train, **fit_params)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\linear_model\_logistic.py", line 1614, in fit
+        for class_, warm_start_coef_ in zip(classes_, warm_start_coef)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\parallel.py", line 1043, in __call__
+        if self.dispatch_one_batch(iterator):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\parallel.py", line 861, in dispatch_one_batch
+        self._dispatch(tasks)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\parallel.py", line 779, in _dispatch
+        job = self._backend.apply_async(batch, callback=cb)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\_parallel_backends.py", line 208, in apply_async
+        result = ImmediateResult(func)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\_parallel_backends.py", line 572, in __init__
+        self.results = batch()
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\parallel.py", line 263, in __call__
+        for func, args, kwargs in self.items]
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\joblib\parallel.py", line 263, in <listcomp>
+        for func, args, kwargs in self.items]
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\utils\fixes.py", line 216, in __call__
+        return self.function(*args, **kwargs)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\linear_model\_logistic.py", line 692, in _logistic_regression_path
+        class_weight_ = compute_class_weight(class_weight, classes=classes, y=y)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\utils\class_weight.py", line 62, in compute_class_weight
+        i = np.searchsorted(classes, c)
+      File "<__array_function__ internals>", line 6, in searchsorted
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 1350, in searchsorted
+        return _wrapfunc(a, 'searchsorted', v, side=side, sorter=sorter)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 66, in _wrapfunc
+        return _wrapit(obj, method, *args, **kwds)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 43, in _wrapit
+        result = getattr(asarray(obj), method)(*args, **kwds)
+    TypeError: '<' not supported between instances of 'str' and 'int'
+    
+      warnings.warn(some_fits_failed_message, FitFailedWarning)
+    C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_search.py:972: UserWarning: One or more of the test scores are non-finite: [       nan 0.71177795        nan        nan        nan 0.7156006
+            nan        nan        nan 0.71942616        nan        nan
+            nan 0.71942324        nan        nan        nan 0.7201866
+            nan        nan        nan 0.7201866         nan        nan
+            nan 0.7201866         nan        nan]
+      category=UserWarning,
+    
+
+    LogisticRegression(C=10.0, class_weight='balanced')
+                  precision    recall  f1-score   support
+    
+               0       0.88      0.83      0.85       249
+               1       0.73      0.81      0.77       144
+    
+        accuracy                           0.82       393
+       macro avg       0.81      0.82      0.81       393
+    weighted avg       0.83      0.82      0.82       393
+    
+    Fitting 5 folds for each of 64 candidates, totalling 320 fits
+    DecisionTreeClassifier(class_weight='balanced', criterion='entropy',
+                           max_depth=2, splitter='random')
+    {'class_weight': 'balanced', 'criterion': 'entropy', 'max_depth': 2, 'splitter': 'random'}
+                  precision    recall  f1-score   support
+    
+               0       0.86      0.92      0.89       249
+               1       0.84      0.74      0.79       144
+    
+        accuracy                           0.85       393
+       macro avg       0.85      0.83      0.84       393
+    weighted avg       0.85      0.85      0.85       393
+    
+    
+
+    C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_validation.py:372: FitFailedWarning: 
+    160 fits failed out of a total of 320.
+    The score on these train-test partitions for these parameters will be set to nan.
+    If these failures are not expected, you can try to debug them by setting error_score='raise'.
+    
+    Below are more details about the failures:
+    --------------------------------------------------------------------------------
+    160 fits failed with the following error:
+    Traceback (most recent call last):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 57, in _wrapfunc
+        return bound(*args, **kwds)
+    TypeError: '<' not supported between instances of 'str' and 'int'
+    
+    During handling of the above exception, another exception occurred:
+    
+    Traceback (most recent call last):
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_validation.py", line 680, in _fit_and_score
+        estimator.fit(X_train, y_train, **fit_params)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\tree\_classes.py", line 942, in fit
+        X_idx_sorted=X_idx_sorted,
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\tree\_classes.py", line 221, in fit
+        self.class_weight, y_original
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\utils\class_weight.py", line 168, in compute_sample_weight
+        class_weight_k, classes=classes_full, y=y_full
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\utils\class_weight.py", line 62, in compute_class_weight
+        i = np.searchsorted(classes, c)
+      File "<__array_function__ internals>", line 6, in searchsorted
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 1350, in searchsorted
+        return _wrapfunc(a, 'searchsorted', v, side=side, sorter=sorter)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 66, in _wrapfunc
+        return _wrapit(obj, method, *args, **kwds)
+      File "C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\numpy\core\fromnumeric.py", line 43, in _wrapit
+        result = getattr(asarray(obj), method)(*args, **kwds)
+    TypeError: '<' not supported between instances of 'str' and 'int'
+    
+      warnings.warn(some_fits_failed_message, FitFailedWarning)
+    C:\Users\borja\Anaconda3\envs\tf\lib\site-packages\sklearn\model_selection\_search.py:972: UserWarning: One or more of the test scores are non-finite: [0.71559475 0.68803486 0.69645228 0.69731216 0.67504022 0.70330204
+     0.69427042 0.68422392 0.6934047  0.67128484 0.62849288 0.68730953
+     0.6918926  0.63998713 0.67047469 0.66592671 0.77972566 0.68803486
+     0.68420052 0.69731216 0.72555351 0.70789389 0.68499898 0.68883039
+     0.71716826 0.65827264 0.67658448 0.67964669 0.68200404 0.63614401
+     0.67891843 0.65446463        nan        nan        nan        nan
+            nan        nan        nan        nan        nan        nan
+            nan        nan        nan        nan        nan        nan
+            nan        nan        nan        nan        nan        nan
+            nan        nan        nan        nan        nan        nan
+            nan        nan        nan        nan]
+      category=UserWarning,
+    
+
+
+```python
+
+```
