@@ -7,6 +7,7 @@ journal: "IEEE/ACM Trans Comput Biol Bioinform"
 shortjournal: ""
 doi: 10.1109/TCBB.2021.3108843
 date: 01-09-2021
+software_res: https://github.com/borjaf696/Compact_Flye
 openaccess: true
 pubmed: 32272874
 highlighted: true

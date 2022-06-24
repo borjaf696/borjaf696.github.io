@@ -7,6 +7,7 @@ journal: "Bioinformatics"
 shortjournal: ""
 doi: 10.1093/bioinformatics/btaa782
 date: 01-05-2021
+software_res: https://bitbucket.org/bfreirec1/data-viadbg/
 highlighted: True
 pubmed: false
 abstract: |

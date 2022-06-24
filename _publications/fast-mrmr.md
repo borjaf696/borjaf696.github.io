@@ -7,6 +7,7 @@ journal: "Information Sciences"
 shortjournal: "IJHPCA"
 doi: 10.1016/j.ins.2019.01.050
 date: 29-10-2018
+software_res: https://github.com/borjaf696/Fast-mRMR
 openaccess: true
 highlighted: true
 pubmed: false

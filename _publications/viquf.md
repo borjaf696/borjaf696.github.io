@@ -7,6 +7,7 @@ journal: "BMC (Submitted)"
 shortjournal: ""
 doi: https://arxiv.org/abs/2112.06590
 date: 12-12-2021
+software_res: https://github.com/borjaf696/ViQUF
 openaccess: true
 pubmed: false
 highlighted: true
