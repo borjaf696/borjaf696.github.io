@@ -4,8 +4,6 @@ title: Trainee
 nav_order: 5
 permalink: /trainee/
 ---
-
-<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
