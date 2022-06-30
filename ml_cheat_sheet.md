@@ -15,4 +15,3 @@ permalink: /trainee/
 <br/>
 <a href="https://github.com/borjaf696/ml_cheat_sheet/blob/main/speech_to_text.ipynb">NLP real world notebook </a>
 <br/>
-</html>
